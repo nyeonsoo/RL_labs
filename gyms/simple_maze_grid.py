@@ -3,14 +3,18 @@ import random
 import pygame
 from gym import spaces
 import sys
+import argparse
+
 
 class SimpleMazeGrid:
-    def __init__(self, n, k, m, render_option=False, random_seed=None):
+    def __init__(self, n, k, m, render_option=False, random_seed=None, stochastic=False, epsilon=0.1):
         self.n = n
         self.k = k
         self.m = m
         self.render_option = render_option
         self.terminated = False
+        self.stochastic = stochastic  # Stochastic option
+        self.epsilon = epsilon  # Epsilon for stochastic behaviour        
         self.reset(random_seed)
         
         # Define action and observation space
@@ -66,7 +70,10 @@ class SimpleMazeGrid:
     def step(self, action, render_option = None):
         if self.terminated:  # Prevent action if game is terminated
             return self._get_state(), 0, True, {}
-
+        
+        # Stochastic action selection
+        if self.stochastic and random.random() < self.epsilon:
+            action = self.action_space.sample()
         
 
         if action == 0:  # Up
@@ -329,8 +336,13 @@ class SimpleMazeGrid:
         self.clock.tick(30)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Simple Maze Grid Environment")
+    parser.add_argument('--stochastic', type=bool, default=False, help='Enable stochastic action selection')
+    parser.add_argument('--epsilon', type=float, default=0.1, help='Probability of taking a random action when stochastic is enabled')
+    args = parser.parse_args()
+
     # Example usage
-    env = SimpleMazeGrid(n=5, k=3, m=2, render_option=True, random_seed=42)
+    env = SimpleMazeGrid(n=5, k=3, m=2, render_option=True, stochastic=args.stochastic, epsilon=args.epsilon, random_seed=42)
     env.reset()
     env.render()
     env.handle_keyboard_input()

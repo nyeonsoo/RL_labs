@@ -15,8 +15,10 @@ pip install -r requirements.txt
 ![image](https://github.com/user-attachments/assets/52d096ee-f5bf-400b-a2d3-deae3fc2b628)
 
 
-**Manual Play**
 
+### Manual Play
+
+**Deterministic Mode**
 ```
 python gyms/simple_maze_grid.py
 ```
@@ -25,8 +27,15 @@ python gyms/simple_maze_grid.py
   - `q` or `ESC`: quit
   - `r`: reset
 
+**For Stochastic Mode**
+```
+python gyms/simple_maze_grid.py --stochastic=True --epsilon=0.2
+```
 
-**Import**
+This means that an action will be randomly chosen 20% of the time.
+
+
+### Import
 ```
 env = SimpleMazeGrid(n=5, k=3, m=2, render_option=True, random_seed=42)
 
