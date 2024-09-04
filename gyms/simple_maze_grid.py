@@ -270,6 +270,9 @@ class SimpleMazeGrid:
                         running = False
                     elif event.key == pygame.K_r: # Reset
                         next_state, reward = self.reset()
+                    else:
+                        next_state = {}
+                        reward = {}
 
 
                     
