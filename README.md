@@ -1,7 +1,13 @@
 # rl_labs
 Lab materials for the Reinforcement Learning class
 
+## Install
 
+```
+git clone https://github.com/inmo-jang/rl_labs.git
+cd rl_labs
+pip install -r requirements.txt
+```
 
 
 ## Simple Maze Grid
