@@ -15,6 +15,10 @@ Lab materials for the Reinforcement Learning class
 python gyms/simple_maze_grid.py
 ```
 
+- Keyboard Control
+  - `q` or `ESC`: quit
+  - `r`: reset
+
 
 **Import**
 ```
