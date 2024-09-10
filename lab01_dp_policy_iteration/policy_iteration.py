@@ -62,10 +62,11 @@ def main():
     n = 5
     k = 3
     m = 4
+    random_seed = 42
     gamma = 0.9
     theta = 1e-6
 
-    env = SimpleMazeGrid(n=n, k=k, m=m, render_option=True, random_seed=42)
+    env = SimpleMazeGrid(n=n, k=k, m=m, render_option=True, random_seed=random_seed)
     env.render()
 
     policy, V, iteration = policy_iteration(env, gamma=gamma, theta=theta)
