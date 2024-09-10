@@ -45,7 +45,6 @@ def policy_improvement(env, V, gamma=0.99):
 def policy_iteration(env, gamma=0.99, theta=1e-6):
     policy = np.ones((env.n * env.n, env.action_space.n)) / env.action_space.n  # Initial policy (uniform random)
     iteration = 0
-    env.render()
     
     while True:
         V = policy_evaluation(env, policy, gamma, theta)
@@ -57,7 +56,7 @@ def policy_iteration(env, gamma=0.99, theta=1e-6):
         policy = new_policy
         iteration += 1        
     
-    return policy, V
+    return policy, V, iteration
 
 def main():
     n = 5
@@ -67,9 +66,12 @@ def main():
     theta = 1e-6
 
     env = SimpleMazeGrid(n=n, k=k, m=m, render_option=True, random_seed=42)
-    policy, V = policy_iteration(env, gamma=gamma, theta=theta)
+    env.render()
+    
+    policy, V, iteration = policy_iteration(env, gamma=gamma, theta=theta)
 
     # Plot the value function
+    env.render_v_values(V, policy, iteration)
     plt.imshow(V.reshape((n, n)), cmap='hot', interpolation='nearest')
     plt.colorbar()
     plt.title('Value Function')
