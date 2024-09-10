@@ -26,7 +26,7 @@ def policy_evaluation(env, policy, gamma=0.99, theta=1e-6):
                 continue
             v = V[state_idx]
 
-            # TODO: Implement the policy iteration algorithm
+            # TODO: Implement the policy evaluation algorithm
     
     return V
 
@@ -67,7 +67,7 @@ def main():
 
     env = SimpleMazeGrid(n=n, k=k, m=m, render_option=True, random_seed=42)
     env.render()
-    
+
     policy, V, iteration = policy_iteration(env, gamma=gamma, theta=theta)
 
     # Plot the value function
