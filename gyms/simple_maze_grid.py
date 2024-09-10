@@ -23,8 +23,8 @@ class SimpleMazeGrid:
         
         if self.render_option:
             pygame.init()
-            self.screen_width = 500
-            self.screen_height = 500
+            self.screen_width = 1000
+            self.screen_height = 1000
             self.info_width = 200
             self.total_width = self.screen_width + self.info_width
             self.screen = pygame.display.set_mode((self.total_width, self.screen_height))
@@ -303,12 +303,12 @@ class SimpleMazeGrid:
     def render_v_values(self, value_table, policy, iteration_number):
         pygame.event.get()
         self.screen.fill((255, 255, 255))
-        cell_size = self.screen_width // self.n
+        cell_size = int(self.screen_width / self.n)
         SENSITIVITY = 10.0
 
         # 방향 화살표 좌표 설정
-        arrow_offset = cell_size // 4
-        arrow_size = cell_size // 4        
+        arrow_offset = int(cell_size / 4)
+        arrow_size = int(cell_size / 4)        
         
         for i in range(self.n):
             for j in range(self.n):
