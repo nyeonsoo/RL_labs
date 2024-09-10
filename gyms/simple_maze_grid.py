@@ -67,7 +67,7 @@ class SimpleMazeGrid:
         return self._get_state(), {}
 
 
-    def step(self, action, render_option = None):
+    def step(self, action):
         if self.terminated:  # Prevent action if game is terminated
             return self._get_state(), 0, True, {}
         
@@ -86,6 +86,7 @@ class SimpleMazeGrid:
             self.player_pos[1] = min(self.n - 1, self.player_pos[1] + 1)
         
         reward = -1
+        self.terminated = False
         if self.player_pos == self.goal_pos:
             reward = 10
             self.terminated = True
@@ -96,10 +97,6 @@ class SimpleMazeGrid:
         self.cumulative_reward += reward
         self.steps += 1
             
-        if (render_option is None) or (render_option is False):
-            pass
-        else:
-            self.render()            
         
         return self._get_state(), reward, self.terminated, {}
     
@@ -274,10 +271,8 @@ class SimpleMazeGrid:
                         next_state = {}
                         reward = {}
 
-
-                    
-                    self.render()
                     if self.render_option:
+                        self.render()
                         print(f"state = \n{next_state}; \nreward = {reward}")
                     
             self.clock.tick(10)
@@ -299,16 +294,22 @@ class SimpleMazeGrid:
         return all_states
 
     def simulate_action(self, player_pos, action):
+        self.retry()
         self.set_player_pos(player_pos)
-        next_state, reward, terminated, _ = self.step(action, render_option=False)
+        next_state, reward, terminated, _ = self.step(action)
         return next_state, reward, terminated
 
               
-    def render_values(self, value_table, policy, iteration_number):
+    def render_v_values(self, value_table, policy, iteration_number):
         pygame.event.get()
         self.screen.fill((255, 255, 255))
         cell_size = self.screen_width // self.n
         SENSITIVITY = 10.0
+
+        # 방향 화살표 좌표 설정
+        arrow_offset = cell_size // 4
+        arrow_size = cell_size // 4        
+        
         for i in range(self.n):
             for j in range(self.n):
                 rect = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
@@ -323,6 +324,31 @@ class SimpleMazeGrid:
                 self.screen.blit(text_surface, (j * cell_size + 10, i * cell_size + 10))
                 
                 pygame.draw.rect(self.screen, (200, 200, 200), rect, 1)
+
+                # 정책에 따른 화살표 그리기
+                state_idx = i * self.n + j
+                if np.max(policy[state_idx]) > 0:  # 유효한 정책이 있을 때만 그리기
+                    action = np.argmax(policy[state_idx])
+
+                    # 화살표 방향 설정
+                    if action == 0:  # up
+                        arrow_points = [(j * cell_size + cell_size // 2, i * cell_size + arrow_offset),
+                                        (j * cell_size + arrow_offset, i * cell_size + arrow_offset + arrow_size),
+                                        (j * cell_size + cell_size - arrow_offset, i * cell_size + arrow_offset + arrow_size)]
+                    elif action == 1:  # down
+                        arrow_points = [(j * cell_size + cell_size // 2, i * cell_size + cell_size - arrow_offset),
+                                        (j * cell_size + arrow_offset, i * cell_size + cell_size - arrow_offset - arrow_size),
+                                        (j * cell_size + cell_size - arrow_offset, i * cell_size + cell_size - arrow_offset - arrow_size)]
+                    elif action == 2:  # left
+                        arrow_points = [(j * cell_size + arrow_offset, i * cell_size + cell_size // 2),
+                                        (j * cell_size + arrow_offset + arrow_size, i * cell_size + arrow_offset),
+                                        (j * cell_size + arrow_offset + arrow_size, i * cell_size + cell_size - arrow_offset)]
+                    elif action == 3:  # right
+                        arrow_points = [(j * cell_size + cell_size - arrow_offset, i * cell_size + cell_size // 2),
+                                        (j * cell_size + cell_size - arrow_offset - arrow_size, i * cell_size + arrow_offset),
+                                        (j * cell_size + cell_size - arrow_offset - arrow_size, i * cell_size + cell_size - arrow_offset)]
+
+                    pygame.draw.polygon(self.screen, (120, 120, 255), arrow_points)  # 화살표 그리기                
                 
                 
         
