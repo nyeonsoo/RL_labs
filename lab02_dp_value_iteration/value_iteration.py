@@ -30,6 +30,10 @@ def value_iteration(env, gamma=0.99, theta=1e-6):
                 continue
             v = V[state_idx]
 
+            # NOTE: The following can be used to visualise this algorithm's process
+            # if env.render_option: 
+            #     env.render_v_values(V, policy, iteration)     
+
             # TODO: Implement the value iteration algorithm            
                     
 
