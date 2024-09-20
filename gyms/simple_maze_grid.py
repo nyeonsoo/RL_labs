@@ -140,7 +140,7 @@ class SimpleMazeGrid:
 
         
          
-    def render_q_values(self, q_table, episode_number):
+    def render_q_values(self, q_table, episode_number, with_arrow = False):
 
         pygame.event.get()
  
@@ -218,6 +218,38 @@ class SimpleMazeGrid:
 
                 # Draw each grid
                 pygame.draw.rect(self.screen, (200, 200, 200), rect, 1)
+
+                if with_arrow:
+                    # 정책에 따른 화살표 그리기
+                    action = np.argmax(q_values)
+                    # 방향 화살표 좌표 설정
+                    arrow_offset = int(cell_size / 4)
+                    arrow_size = int(cell_size / 4)                                    
+
+                    # 화살표 방향 설정
+                    if action == 0:  # up
+                        arrow_points = [(j * cell_size + cell_size // 2, i * cell_size + arrow_offset),
+                                        (j * cell_size + arrow_offset, i * cell_size + arrow_offset + arrow_size),
+                                        (j * cell_size + cell_size - arrow_offset, i * cell_size + arrow_offset + arrow_size)]
+                    elif action == 1:  # down
+                        arrow_points = [(j * cell_size + cell_size // 2, i * cell_size + cell_size - arrow_offset),
+                                        (j * cell_size + arrow_offset, i * cell_size + cell_size - arrow_offset - arrow_size),
+                                        (j * cell_size + cell_size - arrow_offset, i * cell_size + cell_size - arrow_offset - arrow_size)]
+                    elif action == 2:  # left
+                        arrow_points = [(j * cell_size + arrow_offset, i * cell_size + cell_size // 2),
+                                        (j * cell_size + arrow_offset + arrow_size, i * cell_size + arrow_offset),
+                                        (j * cell_size + arrow_offset + arrow_size, i * cell_size + cell_size - arrow_offset)]
+                    elif action == 3:  # right
+                        arrow_points = [(j * cell_size + cell_size - arrow_offset, i * cell_size + cell_size // 2),
+                                        (j * cell_size + cell_size - arrow_offset - arrow_size, i * cell_size + arrow_offset),
+                                        (j * cell_size + cell_size - arrow_offset - arrow_size, i * cell_size + cell_size - arrow_offset)]
+
+                    pygame.draw.polygon(self.screen, (120, 120, 255), arrow_points)  # 화살표 그리기  
+
+
+
+
+
         
         # Draw the goal
         pygame.draw.rect(self.screen, (0, 255, 0), (self.goal_pos[1] * cell_size, self.goal_pos[0] * cell_size, cell_size, cell_size))
