@@ -7,7 +7,7 @@ import argparse
 
 
 class SimpleMazeGrid:
-    def __init__(self, n, k, m, render_option=False, random_seed=None, stochastic=False, epsilon=0.1):
+    def __init__(self, n, k=None, m=None, render_option=False, random_seed=None, stochastic=False, epsilon=0.1, spec=None):
         self.n = n
         self.k = k
         self.m = m
@@ -15,7 +15,17 @@ class SimpleMazeGrid:
         self.terminated = False
         self.stochastic = stochastic  # Stochastic option
         self.epsilon = epsilon  # Epsilon for stochastic behaviour        
-        self.reset(random_seed)
+        if random_seed is None and spec is not None:
+            initial_player_pos, goal_pos, pits  = spec
+            self.initial_player_pos = initial_player_pos # [x,y]
+            self.player_pos = [self.initial_player_pos[0], self.initial_player_pos[1]]
+            self.goal_pos = goal_pos # [x,y]
+            self.pits = pits # [[a,b], [c,d], ...]
+            self.cumulative_reward = 0
+            self.steps = 0            
+        
+        elif random_seed is not None:
+            self.reset(random_seed)
         
         # Define action and observation space
         self.action_space = spaces.Discrete(4)  # 4 actions: up, down, left, right
@@ -37,7 +47,8 @@ class SimpleMazeGrid:
         
     def reset(self, random_seed = None):
 
-        self.player_pos = [0, 0]
+        self.initial_player_pos = [0, 0]
+        self.player_pos = self.initial_player_pos
         self.terminated = False  # Reset termination status
 
         # Set the random seed for reproducibility
@@ -59,7 +70,7 @@ class SimpleMazeGrid:
 
 
     def retry(self):
-        self.player_pos = [0, 0]
+        self.player_pos = [self.initial_player_pos[0], self.initial_player_pos[1]]
         self.terminated = False  # Reset termination status
         self.cumulative_reward = 0
         self.steps = 0
