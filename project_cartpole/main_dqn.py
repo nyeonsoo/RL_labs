@@ -178,7 +178,7 @@ if __name__ == "__main__":
     # Load the existing model if defined
     if load_existing_model:
         print(f"Loading existing model from {model_file_path}")
-        policy_net.load_state_dict(torch.load(model_file_path))
+        policy_net.load_state_dict(torch.load(f"{current_dir}/{model_file_path}"))
         print(f"Model loaded successfully from {model_file_path}")
             
     target_net.load_state_dict(policy_net.state_dict())
