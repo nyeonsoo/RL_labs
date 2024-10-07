@@ -21,7 +21,7 @@ def load_model(model_path, n_observations, n_actions, device):
 
 def visualize_performance(environment, model, device, video_file_name):
     """Record the model's performance in the environment."""
-    env = RecordVideo(environment, video_folder="videos", name_prefix=video_file_name)
+    env = RecordVideo(environment, video_folder=f"{current_dir}/videos", name_prefix=video_file_name)
 
     
     state, info = env.reset()

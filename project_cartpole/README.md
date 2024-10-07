@@ -36,3 +36,8 @@ Welcome to the CartPole reinforcement learning project! In this assignment, youâ
    ```
 
 
+## Remark
+
+You may need to execute the following:
+```bash
+pip install --upgrade -r requirements.txt
