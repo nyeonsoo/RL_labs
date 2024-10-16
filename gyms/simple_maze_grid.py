@@ -99,10 +99,10 @@ class SimpleMazeGrid:
         reward = -1
         self.terminated = False
         if self.player_pos == self.goal_pos:
-            reward = 10
+            reward = 100
             self.terminated = True
         elif self.player_pos in self.pits:
-            reward = -10
+            reward = -100
             self.terminated = True
             
         self.cumulative_reward += reward
@@ -166,7 +166,7 @@ class SimpleMazeGrid:
                 # Get the Q-values for the current cell
                 q_values = q_table[i * self.n + j]
                 
-                SENSITIVITY = 30.0
+                SENSITIVITY = 3.0
                 # Draw diagonals with color corresponding to Q-values
                 for action in range(4):
                     q_a_value = q_values[action]

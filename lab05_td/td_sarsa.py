@@ -88,7 +88,7 @@ def main():
     plt.plot(average_rewards, label=f'$\\alpha$ = {alpha}; $\\epsilon$ = {epsilon}')
     plt.xlabel('Episode')
     plt.ylabel('Average Total Reward')
-    plt.ylim(-100, 0)    
+    plt.ylim(-200, 100)    
     plt.title(f'SARSA Learning Training (Average Over {num_runs} Runs)')
     plt.grid(True)
     plt.legend()
