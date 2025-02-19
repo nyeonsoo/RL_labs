@@ -41,6 +41,16 @@ def sarsa_learning(env, num_episodes=100, alpha=0.1, gamma=0.99, epsilon=0.1, re
 
             # TODO: Implement SARSA algorithm
 
+            # Choose next action A' from S'
+            next_action = choose_action(next_state_index, Q, epsilon, env.action_space)
+
+            # SARSA Update
+            Q[state_index, action] += alpha * (reward + gamma * Q[next_state_index, next_action] - Q[state_index, action])
+
+            # Update S and A
+            state_index = next_state_index
+            action = next_action
+
             # Etc
             total_reward += reward
 
@@ -52,9 +62,8 @@ def sarsa_learning(env, num_episodes=100, alpha=0.1, gamma=0.99, epsilon=0.1, re
     return Q, total_rewards
 
 def main():
-    num_runs = 1 # NOTE: This is just to investigate the learning curve
-    render_option = True
-
+    num_runs = 20 # NOTE: This is just to investigate the learning curve
+    render_option = False
     num_episodes = 1000
 
     # Q-learning parameters
@@ -67,6 +76,7 @@ def main():
 
     all_rewards = np.zeros((num_runs, num_episodes))
 
+    
     for run in range(num_runs):
         # env = SimpleMazeGrid(n=n, k=k, m=m, render_option=render_option, random_seed=random_seed)
         player_pos = [n-1, 0]

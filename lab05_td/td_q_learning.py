@@ -17,6 +17,7 @@ def choose_action(state_index, Q, epsilon, action_space):
         return action_space.sample()  # Explore
     else:
         return np.argmax(Q[state_index])  # Exploit
+    
 def q_table_learning(env, num_episodes=100, alpha=0.1, gamma=0.99, epsilon=0.1, render_option=False):
     Q = np.zeros((env.n * env.n, env.action_space.n))
     total_rewards = []
@@ -38,6 +39,11 @@ def q_table_learning(env, num_episodes=100, alpha=0.1, gamma=0.99, epsilon=0.1, 
             next_state_index = state_to_index(next_state, env.n)
 
             # TODO: Implement Q-learning
+            # Q-learning update rule 
+            Q[state_index, action] += alpha * (reward + gamma * np.max(Q[next_state_index]) - Q[state_index, action])
+
+            # Update S to S'
+            state_index = next_state_index
 
             # Etc
             total_reward += reward
@@ -50,8 +56,8 @@ def q_table_learning(env, num_episodes=100, alpha=0.1, gamma=0.99, epsilon=0.1, 
     return Q, total_rewards
 
 def main():
-    num_runs = 1 # NOTE: This is just to investigate the learning curve
-    render_option = True
+    num_runs = 20 # NOTE: This is just to investigate the learning curve
+    render_option = False
 
     num_episodes = 1000
 
@@ -64,7 +70,7 @@ def main():
     n = 10  # Grid size
 
     all_rewards = np.zeros((num_runs, num_episodes))
-
+ 
     for run in range(num_runs):
         # env = SimpleMazeGrid(n=n, k=k, m=m, render_option=render_option, random_seed=random_seed)
         player_pos = [n-1, 0]
@@ -92,7 +98,8 @@ def main():
     plt.legend()
     plt.savefig('results/q_table_learning_simple_maze_grid_average.png')
     plt.show()
-
+    
+    
     print("Completed!")
 
 if __name__ == "__main__":
