@@ -1,0 +1,6 @@
+gym
+pygame
+argparse
+ipython
+gymnasium
+moviepy
