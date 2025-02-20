@@ -27,7 +27,21 @@ def policy_evaluation(env, policy, gamma=0.99, theta=1e-6):
             v = V[state_idx]
 
             # TODO: Implement the policy evaluation algorithm
-    
+            new_v = 0
+
+            # 정책에 따라 각 행동에 대해 가치 계산
+            for action, action_prob in enumerate(policy[state_idx]):
+                next_state, reward, terminated = env.simulate_action(player_pos, action)[:3]
+                next_state_idx = state_to_index(next_state, env.n)
+                if next_state_idx is not None:
+                    new_v += action_prob * (reward + gamma * V[next_state_idx] * (not terminated))
+                else:
+                    new_v += action_prob * reward
+            
+            # 가치 함수 업데이트
+            V[state_idx] = new_v
+            delta = max(delta, abs(v - V[state_idx]))
+
     return V
 
 def policy_improvement(env, V, gamma=0.99):
@@ -39,6 +53,20 @@ def policy_improvement(env, V, gamma=0.99):
         if state_idx is None:
             continue        
         # TODO: Implement the policy improvement algorithm        
+        q_values = np.zeros(env.action_space.n)
+        
+        # 각 행동에 대해 Q(s, a) 계산
+        for action in range(env.action_space.n):
+            next_state, reward, terminated = env.simulate_action(player_pos, action)[:3]
+            next_state_idx = state_to_index(next_state, env.n)
+            if next_state_idx is not None:
+                q_values[action] = reward + gamma * V[next_state_idx] * (not terminated)
+            else:
+                q_values[action] = reward
+        
+        # Q 값이 가장 큰 행동을 선택하여 정책을 업데이트
+        best_action = np.argmax(q_values)
+        policy[state_idx][best_action] = 1.0  # Greedy 선택
     
     return policy
 
@@ -59,10 +87,10 @@ def policy_iteration(env, gamma=0.99, theta=1e-6):
     return policy, V, iteration
 
 def main():
-    n = 5
-    k = 3
-    m = 4
-    random_seed = 42
+    n = 20
+    k = 19
+    m = 100
+    random_seed = 2
     gamma = 0.9
     theta = 1e-6
 
